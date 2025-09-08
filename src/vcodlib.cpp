@@ -1469,8 +1469,21 @@ void custom_SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
     char downloadNameNoExt[MAX_QPATH];
     char errorMessage[MAX_STRINGLENGTH];
 
-    if(!*cl->downloadName)
+	// Block download attempts if the client is already playing
+	// At this point, all relevant downloads should have been processed already
+	if ( cl->state == CS_ACTIVE )
+		return;
+
+    if( !*cl->downloadName )
         return;
+
+	// Block filenames that are shorter than .pk3
+	if ( strlen(cl->downloadName) < 4 )
+		return;
+
+	// WWW download has been acknowledged
+	if ( cl->clientDownloadingWWW )
+		return;
     
     cl->state = CS_CONNECTED;
     cl->rate = 25000;
