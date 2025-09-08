@@ -1474,9 +1474,10 @@ void custom_SV_WriteDownloadToClient(client_t *cl, msg_t *msg)
 	if ( cl->state == CS_ACTIVE )
 		return;
 
-    if( !*cl->downloadName )
+    if( !*cl->downloadName ) {
         return;
-
+    }
+	
 	// Block filenames that are shorter than .pk3
 	if ( strlen(cl->downloadName) < 4 )
 		return;
